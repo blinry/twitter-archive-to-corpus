@@ -1,6 +1,8 @@
 require "json"
 require "cgi"
 
+NAME = "blinry"
+
 js = File.read("tweet.js")
 json = js[25..-1]
 json = JSON.parse(json)
@@ -22,7 +24,7 @@ end
 
 tweets.select! do |t|
   # Drop tweets that are RTs or replies to other people.
-  not t =~ /^RT / and not(t =~ /^@/ and not t =~ /^@blinry /)
+  not t =~ /^RT / and not(t =~ /^@/ and not t =~ /^@#{NAME} /)
 end
 
 tweets.map! do |t|
@@ -30,7 +32,7 @@ tweets.map! do |t|
   t = CGI.unescapeHTML(t)
 
   # Because we only want top-level tweets, remove the mentions from longer threads.
-  t = t.gsub(/^@blinry /, "")
+  t = t.gsub(/^@#{NAME} /, "")
 
   # Mask mentions and hashtags with a word joiner, U+2060.
   t = t.gsub(/@/, "@⁠")
